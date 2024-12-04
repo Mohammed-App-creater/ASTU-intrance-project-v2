@@ -11,66 +11,69 @@ Getting Started with ASTUChat
 
 Follow these easy steps to set up and experience ASTUChat:
 
-Prerequisites:
+#Prerequisites:
 
-Node.js and npm installed on your system (https://nodejs.org/)
-Installation:
+*Node.js and npm installed on your system (https://nodejs.org/)
 
-Clone the Repository:
+#Installation:
 
-Bash
+##Clone the Repository:
+
+```Bash
 git clone https://github.com/Mohammed-App-creater/ASTU-intrance-project-v2.git
-Use code with caution.
+```
 
-Install Dependencies:
+#Install Dependencies:
 
-Navigate to the project directory and run:
+##On new Terminal Navigate to the project directory and run:
 
-Bash
+```Bash
 cd ASTU-intrance-project-v2
 npm install
-Use code with caution.
+```
 
-Running ASTUChat:
+#Running ASTUChat:
 
 Start the Client:
 
-Move to the client folder:
+#Move to the client folder:
 
-Bash
-cd client
-Use code with caution.
+```Bash
+cd ASTU-intrance-project-client
+```
 
 Start the development server:
 
-Bash
+```Bash
 npm run dev
-Use code with caution.
+```
 
 Open the following link in your web browser (replace localhost with your machine's IP address if accessing remotely):
 
 http://localhost:5173/
-Start the Server:
 
-Navigate to the server folder:
 
-Bash
-cd server
-Use code with caution.
+# Start the Server:
+
+## On new terminal Navigate to the server folder:
+
+```Bash
+cd ASTU-intrance-project-server
+```
 
 Install server dependencies:
 
-Bash
+```Bash
 npm install
-Use code with caution.
+```
 
 Start the server:
 
-Bash
+```Bash
 npm start
-Use code with caution.
+```
 
-Interacting with ASTUChat:
+#Interacting with ASTUChat:
 
 Once both client and server are running, you can start sending your prompts and receive responses from ASTUChat!
 
@@ -80,6 +83,6 @@ We welcome contributions to ASTUChat! To learn more about contributing, please r
 
 License
 
-This project is licensed under [insert your chosen license here] (e.g., MIT License). See the LICENSE file for details.
+This project is licensed under [Mohamed-BUSINESS-GROUP](https://mohammed-app-creater.github.io/Myporfile/). See the LICENSE file for details.
 
 I hope this enhanced README.md file effectively captures your project's essence and provides clear instructions for users. Feel free to customize the content further to reflect your specific vision.
