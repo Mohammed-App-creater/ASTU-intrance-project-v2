@@ -1,17 +1,35 @@
+import { useState } from "react";
+import History from "./History";
+import Setting from "./Setting";
 type Props = {
   isOpen: boolean;
 };
 
 const SideBar: React.FC<Props> = (props) => {
+  const [settings, setSettings] = useState(false);
+  const handleClick = () => {
+    setSettings(!settings);
+  };
+
+
+  
+
   return (
     <section
-      className={`h-screen w-[85%]   absolute top-0 left-0   flex flex-col justify-end gap-3   bg-[#ffffff]   dark:bg-[#040824] rounded-r-2xl lg:rounded-none z-10  ${
+      className={`h-screen w-[85%] bg-[#eff4fb]   absolute top-0 left-0   flex flex-col justify-end gap-3     dark:bg-[#040824] rounded-r-2xl lg:rounded-none z-10  ${
         props.isOpen
           ? " max-lg:translate-x-0   transition-all duration-300   pb-32 lg:w-[23.5%] xl:w-[18.5%]  "
           : " max-lg:-translate-x-full  transition-all duration-300  lg:w-[4.6rem] pb-16"
       }`}
     >
-      <div className={` h-12 flex items-center gap-4 ${ props.isOpen? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 " : "pl-3"}`}>
+      <div
+        className={` h-12 flex items-center gap-4 ${
+          props.isOpen
+            ? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 "
+            : "pl-3"
+        }`}
+      >
+        <a href="/ChatBot" target="_blank">
         <div className=" h-full w-12 flex items-center justify-center  rounded-full active:bg-opacity-5 hover:bg-[#09172c]  ">
           <svg
             className=" dark:fill-[#b5b8c5]"
@@ -32,30 +50,16 @@ const SideBar: React.FC<Props> = (props) => {
         >
           New Chat
         </p>
+        </a>
       </div>
-      <div className={` h-12 flex items-center gap-4 ${ props.isOpen? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 " : "pl-3"}`}>
-        <div className=" h-full w-12 flex items-center justify-center  rounded-full active:bg-opacity-5 hover:bg-[#09172c]  ">
-          <svg
-            className=" dark:fill-[#b5b8c5]"
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-          >
-            <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-          </svg>
-        </div>
-        <p
-          className={` dark:text-[#b5b8c5] ${
-            props.isOpen
-              ? "transition-all duration-300 ease-in-out"
-              : "transition-all duration-300 ease-in-out hidden "
-          }`}
-        >
-          How to use
-        </p>
-      </div>
-    <div className={` h-12 flex items-center gap-4 ${ props.isOpen? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 " : "pl-3"} `}>
+      <History isOpne={props.isOpen} />
+      <div
+        className={` h-12 flex items-center gap-4 ${
+          props.isOpen
+            ? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 "
+            : "pl-3"
+        }`}
+      >
         <div className=" h-full w-12 flex items-center justify-center  rounded-full active:bg-opacity-5 hover:bg-[#09172c]  ">
           <svg
             className=" dark:fill-[#b5b8c5]"
@@ -79,8 +83,13 @@ const SideBar: React.FC<Props> = (props) => {
         </p>
       </div>
       <div
-        className={`flex items-center h-12 gap-4 ${ props.isOpen? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 " : "pl-3"} `}
-      >
+      onClick={handleClick}
+        className={`flex items-center h-12 gap-4 ${
+          props.isOpen
+            ? "hover:bg-[#09172c]  active:bg-opacity-5 rounded-xl pl-6 "
+            : "pl-3"
+        } `}
+        >
         <div className=" h-full w-12 flex items-center justify-center  rounded-full active:bg-opacity-5 hover:bg-[#09172c]  ">
           <svg
             className=" dark:fill-[#b5b8c5]"
@@ -102,6 +111,9 @@ const SideBar: React.FC<Props> = (props) => {
           Settings
         </p>
       </div>
+        <div className={` ${settings ? "block " : "hidden"} ${props.isOpen ? "left-80 " : "left-20"} absolute bg-[#eff4fb]   dark:bg-[#040824] dark:shadow-[#363a4a] shadow-[#a0a1a2]  shadow-all-around  w-[16rem] h-40 rounded-3xl overflow-hidden `}>
+          <Setting   />
+        </div>
     </section>
   );
 };

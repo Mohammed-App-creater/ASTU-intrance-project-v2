@@ -67,6 +67,8 @@ const ChatBot = () => {
     return true;
   };
 
+
+
   useEffect(() => {
     const lastMessage = chatHistory[chatHistory.length - 1]?.parts[0]?.text;
     if (lastMessage) {
@@ -74,7 +76,7 @@ const ChatBot = () => {
     }
   }, [chatHistory]);
   return (
-    <div className="rel w-full h-screen bg-white dark:bg-[#050615]  flex items-center justify-center">
+    <div className="rel w-full h-screen bg-white dark:bg-[#050615]  flex items-center justify-center ">
       <Nav menuBtn={toggleSidebar} isSidebarOpen={isSidebarOpen} />
       <SideBar isOpen={isSidebarOpen} />
       <Chattbox

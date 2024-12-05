@@ -56,7 +56,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ getResponse, isSidebarOpen, }
 
   return (
     <div
-      className={`relative h-full min-h-16 w-full flex items-end justify-evenly pb-1 bg-[#ffffff] dark:bg-[#040824] shadow-all-around  rounded-2xl transition-all ease-linear ${
+      className={`relative h-full min-h-16 w-full flex items-end justify-evenly pb-1 bg-[#eff4fb] dark:bg-[#040824] shadow-all-around  rounded-2xl transition-all ease-linear ${
         isSidebarOpen ? " lg:translate-x-48" : ""
       }`}
     >

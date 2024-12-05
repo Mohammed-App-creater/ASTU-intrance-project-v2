@@ -4,32 +4,22 @@ import express, { json, urlencoded } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Mongoose } from "mongoose";
 import bcrypt from "bcrypt";
-//import { User } from "./models/user.js";
 import flash from "express-flash";
-import session from "express-session";
+import session, { Session } from "express-session";
 import passport from "passport";
 import initializem from "./passportIntializ.js";
 
 async function getUserByEmail(email) {
   const user = await User.findOne({ email });
-  console.log("User fetched by email:", user);
   return user;
 }
-
-
 
 async function getUserById(id) {
   const user = await User.findById(id);
-  console.log("User fetched by ID:", user);
   return user;
 }
 
-
-initializem(
-  passport,
-  getUserByEmail,
-  getUserById
-);
+initializem(passport, getUserByEmail, getUserById);
 
 const PORT = 8000;
 dotenv.config();
@@ -58,9 +48,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 mongoose.connect("mongodb://127.0.0.1:27017/UsersDB");
+
+// ---------Schemas---------------------
 
 
 const userSchema = new mongoose.Schema({
@@ -68,37 +58,90 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
 });
-
-
 const User = mongoose.model("User", userSchema);
 
-const userToke= {
+const sessionSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  sessionName: { type: String, default: "" },
+  createdAt: { type: Date, default: Date.now },
+});
+const ChatSession = mongoose.model("Session", sessionSchema);
+
+const chatSchema = new mongoose.Schema({
+  sessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Session",
+    required: true,
+  },
+  message: { type: String, required: true },
+  isBot: { type: Boolean, default: false },
+  timestamp: { type: Date, default: Date.now },
+});
+const Chat = mongoose.model("Chat", chatSchema);
+
+const userToke = {
   name: "",
+  email: "",
+  id: "",
+  SessionId: "",
   authenticate: false,
+};
+
+//-----------------------------------------
+
+async function findMessagesBySessionId(sessionId) {
+  try {
+    const messages = await Chat.find(
+      { sessionId: sessionId }, 
+      { message: 1, _id: 0 }
+    );
+    
+    console.log(messages);
+  } catch (error) {
+    console.error('Error finding messages:', error);
+  }
 }
 
-// passport.use(User.createStrategy());
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+async function findAllSessions() {
+  const sessions = await ChatSession.find({}, { _id: 1 });
+  const sessionIds = sessions.map(session => session._id.toString());
+  findFirstMessages(sessionIds);
+  return sessionIds;
+}
 
-app.post("/home", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.send({
-      authenticate: true,
-      name: req.user.name,
-    });
-  } else {
-    res.send({
-      authenticate: false,
-    });
+async function findFirstMessages(sessionIds) {
+  try {
+    const firstMessages = [];
+    
+    for (const sessionId of sessionIds) {
+      // Find the first message for the given sessionId
+      const message = await Chat.findOne(
+        { sessionId: sessionId }, // Match sessionId
+        { message: 1, _id: 0 } // Include only the message field
+      ).sort({ timestamp: 1 }); // Sort by timestamp in ascending order
+      
+      // Add the message to the array if it exists
+      if (message) {
+        firstMessages.push(message.message);
+      }
+    }
+    
+    console.log(firstMessages);
+    return firstMessages;
+  } catch (error) {
+    console.error('Error finding first messages:', error);
+    throw error;
   }
-});
+}
+
+
+
 
 app.post("/signUp", async (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
-  try{
+  try {
     const hashedPasswod = await bcrypt.hash(password, 10);
     const newUser = new User({
       name: name,
@@ -107,62 +150,56 @@ app.post("/signUp", async (req, res) => {
     });
     newUser.save();
     res.send("User registered successfully");
-  }catch(err){
+  } catch (err) {
     console.log(err);
     res.send("User already exists");
   }
-
-  
 });
 
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureFlash: true,
+  }),
+  async (req, res) => {
+    userToke.id = req.user._id;
+    userToke.name = req.user.name;
+    userToke.email = req.user.email;
+    userToke.authenticate = true;
 
-
-
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  failureFlash: true
-}), (req, res) => {
-  console.log(req.user);
-  userToke.name = req.user.name;
-  userToke.authenticate = true;
-  res.send(userToke);
-});
-
-// Handle failed authentication requests
-app.post('/login', (req, res) => {
-  res.send('Not logged in');
-});
-
-
-
-
-function checkNotAuthenticated(req, res, next) {
-  if (userToke.authenticate) {
-    return res.send(userToke);
+    const newSession = new ChatSession({
+      userId: req.user._id,
+      sessionName: `Session on ${new Date().toLocaleString()}`, // Optional session name
+    });
+    await newSession.save();
+    findAllSessions();
+    userToke.SessionId = newSession.id;
+    res.send(userToke);
   }
-  next();
-}
-
+);
 
 app.post("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
+    userToke.name = "";
+    userToke.email = "";
+    userToke.id = "";
+    userToke.SessionId = "";
+    userToke.authenticate = false;
     res.send("Logged out");
   });
 });
 
-app.use((req, res, next) => {
-  console.log("Session:", req.session);
-  next();
+app.post("/ChatBot", (req, res) => {
+  return res.send(userToke);
 });
 
-
-app.post('/ChatBot', (req, res) => {
-    return  res.send(userToke);
+app.post('/history', async (req, res) => {
+  const history = await findFirstMessages(await findAllSessions());
+  res.send({history: history});
 });
-
-
 
 app.post("/gemini", async (req, res) => {
   try {
@@ -175,14 +212,33 @@ app.post("/gemini", async (req, res) => {
     const result = await chat.sendMessage(message);
     const response = await result.response;
     const text = response.text();
-    console.log(response.candidates[0].content);
+
+    const mm = await ChatSession.findById(userToke.SessionId);
+
+    const UserChat = new Chat({
+      sessionId: mm.id,
+      message: message,
+      isBot: false,
+    });
+
+
+    const ASTUChat = new Chat({
+      sessionId: userToke.SessionId,
+      message: text,
+      isBot: true,
+    });
+
+    await UserChat.save();
+    await ASTUChat.save();
+    // await findMessagesBySessionId(mm._id);
+
+    
     res.send(text);
   } catch (error) {
-    console.error(error);
+    console.error("Error processing request: " ,error);
     res.status(500).json({ error: "Internal Server Error" + error });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

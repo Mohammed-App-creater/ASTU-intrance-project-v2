@@ -1,21 +1,26 @@
 import Form from "./Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useHistory } from "./HistoryContext"
 
 const LogIn = () => {
   const Navigate = useNavigate();
+  const { setHistory } = useHistory();
   const handleLogin = (email: string, password: string) => {
     axios
       .post("http://localhost:8000/login", {
         email: email,
         password: password,
       })
-      .then((response) => {
-        console.log(response)
+      .then(async (response) => {
+        console.log(response);
         if (response.data.authenticate) {
-          //localStorage.setItem("token", response.data.token);
+          const historyResponse = await axios.post<{ history: string[] }>(
+            "http://localhost:8000/history"
+          );
+          setHistory(historyResponse.data.history); 
           Navigate("/ChatBot");
-        }else{
+        } else {
           alert("Invalid email or password");
         }
       })

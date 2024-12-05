@@ -34,3 +34,15 @@ body {
   }
 }
 
+.landingBg {
+  background-image: url("./src/assets/landingbg.jpg");
+  background-size: cover;
+  background-position: right center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent repetition */
+  position: fixed; /* Fix the background to the viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+

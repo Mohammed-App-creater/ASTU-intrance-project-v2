@@ -82,12 +82,6 @@ npm start
 
 Once both client and server are running, you can start sending your prompts and receive responses from ASTUChat!
 
-Contributing
-
-We welcome contributions to ASTUChat! To learn more about contributing, please refer to the CONTRIBUTING.md file (if present in the repository).
-
-License
 
 This project is licensed under [MOHAMMED-BUSINESS-GROUP](https://mohammed-app-creater.github.io/Myporfile/). See the LICENSE file for details.
 
-I hope this enhanced README.md file effectively captures your project's essence and provides clear instructions for users. Feel free to customize the content further to reflect your specific vision.

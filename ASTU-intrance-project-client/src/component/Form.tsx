@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FocusEvent, ChangeEvent } from "react";
 import logo from "../assets/photo_2024-12-03_09-36-25(1)(1)_enhanced.png";
 import { Link } from "react-router-dom";
 
@@ -10,28 +10,55 @@ const Form = (props: {
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  //const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [Name, setName] = useState("");
   const [Email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [Password, setPasswoed] = useState("");
   const signup = props.signup;
   const Port = props.Port;
+
+  const validateEmail = (Email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(Email);
+  };
 
   const handleNameFocus = () => {
     setIsNameFocused((prev) => !prev);
   };
 
   const handleUserFocus = () => {
-    setIsFocused((prev) => !prev);
+    setIsFocused(true);
+    setEmailError("");
   };
 
   const handlePasswordFocus = () => {
     setIsPasswordFocused((prev) => !prev);
   };
 
-  
+  // Email validation function
+ 
 
-  
+  const handleEmailBlur = (e: FocusEvent<HTMLInputElement>): void => {
+      const inputValue = e.target.value;
+      if (!inputValue) {
+        setEmailError("Email is required.");
+      } else if (!validateEmail(inputValue)) {
+        setEmailError("Please enter a valid email address.");
+      }
+      setIsFocused(false)
+    };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const inputValue = e.target.value;
+    setEmail(inputValue);
+    if (!emailError) {
+      
+      if (validateEmail(inputValue)) {
+        setEmailError("");
+      }
+    }
+  };
+
   return (
     <div className="w-screen h-screen  flex  justify-center">
       <div className=" max-w-[400px] w-full h-full flex flex-col  items-center py-8">
@@ -60,6 +87,7 @@ const Form = (props: {
                 type="Name"
                 id="Name"
                 name="Name"
+                autoComplete="true"
                 onFocus={handleNameFocus}
                 onBlur={handleNameFocus}
                 onChange={(e) => setName(e.target.value)}
@@ -67,7 +95,8 @@ const Form = (props: {
               />
             </div>
           )}
-          <div className=" relative w-full ">
+
+          <div className=" relative w-full mb-6">
             <label
               htmlFor="Email"
               className={` absolute top-4 left-4   bg-white text-gray-600 font-normal text-base mb-2 max-w-[90%]  pointer-events-none text-ellipsis  origin-top transition-all duration-300 ease-in-out whitespace-nowrap   z-10 ${
@@ -80,14 +109,19 @@ const Form = (props: {
             </label>
             <input
               type="email"
+              required={true}
               id="Email"
               autoComplete="true"
               onFocus={handleUserFocus}
-              onBlur={handleUserFocus}
-              onChange={(e) => setEmail(e.target.value)}
+              onBlur={handleEmailBlur}
+              onChange={handleChange}
               name="Email"
-              className={` border pl-4  border-[#c2c8d0] w-full h-14 text-[#2d333a] mb-6 rounded-md    focus:border-[#10a37f]   focus:outline-none `}
+              value={Email}
+              className={` border pl-4  border-[#c2c8d0] w-full h-14 text-[#2d333a]  rounded-md    focus:border-[#10a37f]   focus:outline-none `}
             />
+            {emailError && (
+                <p className="text-red-500 text-sm">{emailError}</p>
+              )}
           </div>
           <div className=" relative w-full ">
             <label
@@ -111,20 +145,21 @@ const Form = (props: {
             />
           </div>
           <button
+            disabled={ !(!emailError)}
             onClick={(e) => {
-                e.preventDefault();
-                if(signup){
-                   props.handleSubmit(Email, Password)
-                 }else{
-                   props.handleSubmit( Email, Password, Name)
-                  }
+              e.preventDefault();
+              if (signup) {
+                props.handleSubmit(Email, Password);
+              } else {
+                props.handleSubmit(Email, Password, Name);
+              }
             }}
             type="submit"
             className=" w-full h-14 bg-[#10a37f] text-white rounded-md hover:bg-[#10a37ebd] active:bg-[#10a37ebd] active:scale-95"
           >
-            { signup? "LogIn" : "Sing Up"}
+            {signup ? "LogIn" : "Sing Up"}
           </button>
-          
+
           <div className=" w-full h-14 flex justify-center items-center ">
             <span className="text-gray-600 text-base font-normal">
               {signup ? "Don't have an account?" : "Already have an account? "}
