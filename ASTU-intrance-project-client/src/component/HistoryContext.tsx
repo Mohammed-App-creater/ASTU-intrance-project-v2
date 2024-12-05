@@ -1,11 +1,16 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-type HistoryItem = string;
+// Define the structure of the history object
+interface HistoryData {
+  firstMessages: string[];
+  messageSessionIds: string[];
+}
 
 interface HistoryContextType {
-  history: HistoryItem[];
-  setHistory: React.Dispatch<React.SetStateAction<HistoryItem[]>>;
+  history: HistoryData;
+  setHistory: React.Dispatch<React.SetStateAction<HistoryData>>;
 }
+
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
 interface HistoryProviderProps {
@@ -15,7 +20,10 @@ interface HistoryProviderProps {
 export const HistoryProvider: React.FC<HistoryProviderProps> = ({
   children,
 }) => {
-  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [history, setHistory] = useState<HistoryData>({
+    firstMessages: [],
+    messageSessionIds: [],
+  });
 
   return (
     <HistoryContext.Provider value={{ history, setHistory }}>

@@ -2,7 +2,7 @@ import Chattbox from "./Chattbox";
 import Nav from "./Nav";
 import PromtInput from "./PromtInput";
 import SideBar from "./SideBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ChatMessage {
   role: string;
@@ -21,6 +21,14 @@ const ChatBot = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [userMassage, setUserMassage] = useState<string>("");
   const [aiRespons, setAiRespons] = useState<string>("");
+
+  const chatboxRef = useRef<{ loadHistory: (index: number) => void }>(null);
+
+  const handleLoadHistory = (index: number) => {
+    if (chatboxRef.current) {
+      chatboxRef.current.loadHistory(index);
+    }
+  };
 
   const getResponse: (value: string) => Promise<boolean> = async (value) => {
     setUserMassage(value);
@@ -67,6 +75,7 @@ const ChatBot = () => {
     return true;
   };
 
+ 
 
 
   useEffect(() => {
@@ -78,11 +87,12 @@ const ChatBot = () => {
   return (
     <div className="rel w-full h-screen bg-white dark:bg-[#050615]  flex items-center justify-center ">
       <Nav menuBtn={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-      <SideBar isOpen={isSidebarOpen} />
+      <SideBar isOpen={isSidebarOpen} onLoadHistory={handleLoadHistory} />
       <Chattbox
         userMassage={userMassage}
         aiResponse={aiRespons}
         isSidebarOpen={isSidebarOpen}
+        ref={chatboxRef}
       />
       <div
         className={` absolute w-[85%] lg:w-[50%]  bottom-12  lg:left-1/2 lg:-translate-x-1/2  `}

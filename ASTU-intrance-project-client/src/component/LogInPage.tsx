@@ -13,11 +13,11 @@ const LogIn = () => {
         password: password,
       })
       .then(async (response) => {
-        console.log(response);
         if (response.data.authenticate) {
-          const historyResponse = await axios.post<{ history: string[] }>(
+          const historyResponse = await axios.post<{  history: { firstMessages: string[]; messageSessionIds: string[] } }>(
             "http://localhost:8000/history"
           );
+          console.log(historyResponse.data.history);
           setHistory(historyResponse.data.history); 
           Navigate("/ChatBot");
         } else {

@@ -20,9 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         console.error("Error during authentication check:", error);
         setToken(false);
       });
-  }, []); // Empty dependency array ensures this runs only once on mount
-
-  // While checking authentication, show a loading state
+  }, []); 
   if (token === null) {
     return <div>Loading...</div>;
   }

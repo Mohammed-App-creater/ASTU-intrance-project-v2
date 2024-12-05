@@ -112,28 +112,35 @@ async function findAllSessions() {
 async function findFirstMessages(sessionIds) {
   try {
     const firstMessages = [];
+    const massagesessionIds = [];
     
     for (const sessionId of sessionIds) {
-      // Find the first message for the given sessionId
       const message = await Chat.findOne(
-        { sessionId: sessionId }, // Match sessionId
-        { message: 1, _id: 0 } // Include only the message field
-      ).sort({ timestamp: 1 }); // Sort by timestamp in ascending order
-      
-      // Add the message to the array if it exists
+        { sessionId: sessionId }, 
+        { message: 1, _id: 0 } 
+      ).sort({ timestamp: 1 });   
       if (message) {
         firstMessages.push(message.message);
+        massagesessionIds.push(sessionId);
       }
     }
-    
-    console.log(firstMessages);
-    return firstMessages;
+    return { firstMessages, massagesessionIds };
   } catch (error) {
     console.error('Error finding first messages:', error);
     throw error;
   }
 }
 
+async function findAllChatofSetion(sessionId) {
+  try {
+    const chats = await Chat.find({ sessionId: sessionId }, { message: 1, _id: 0 });
+    const messages = chats.map(chat => chat.message);
+    return messages;
+  } catch (error) {
+    console.error('Error finding all chats for session:', error);
+    throw error;
+  }
+}
 
 
 
@@ -200,6 +207,14 @@ app.post("/ChatBot", (req, res) => {
 app.post('/history', async (req, res) => {
   const history = await findFirstMessages(await findAllSessions());
   res.send({history: history});
+});
+
+app.post('/loadHistory', async (req, res) => {
+
+  const { index, history } = req.body;
+  const sessionId = history.massagesessionIds[index]; 
+  const historys = await findAllChatofSetion(sessionId);
+  res.send(historys);
 });
 
 app.post("/gemini", async (req, res) => {

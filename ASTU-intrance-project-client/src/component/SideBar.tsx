@@ -1,8 +1,11 @@
 import { useState } from "react";
 import History from "./History";
 import Setting from "./Setting";
+
+
 type Props = {
   isOpen: boolean;
+  onLoadHistory: (index: number) => void;
 };
 
 const SideBar: React.FC<Props> = (props) => {
@@ -12,7 +15,7 @@ const SideBar: React.FC<Props> = (props) => {
   };
 
 
-  
+ 
 
   return (
     <section
@@ -29,7 +32,7 @@ const SideBar: React.FC<Props> = (props) => {
             : "pl-3"
         }`}
       >
-        <a href="/ChatBot" target="_blank">
+        <a  href="/ChatBot" target="_blank">
         <div className=" h-full w-12 flex items-center justify-center  rounded-full active:bg-opacity-5 hover:bg-[#09172c]  ">
           <svg
             className=" dark:fill-[#b5b8c5]"
@@ -52,7 +55,7 @@ const SideBar: React.FC<Props> = (props) => {
         </p>
         </a>
       </div>
-      <History isOpne={props.isOpen} />
+      <History isOpne={props.isOpen} onLoadHistory={props.onLoadHistory} />
       <div
         className={` h-12 flex items-center gap-4 ${
           props.isOpen

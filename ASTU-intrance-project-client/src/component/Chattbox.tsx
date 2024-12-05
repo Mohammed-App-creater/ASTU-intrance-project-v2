@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import Formatter from "./Formater";
 import logo from "../assets/favicon-96x96.png";
+import { useHistory } from "./HistoryContext";
+import axios from "axios";
 
 
 
@@ -10,9 +12,13 @@ interface ChattboxProps {
   isSidebarOpen: boolean;
 }
 
-function Chattbox(props: ChattboxProps) {
-  const userMassage = props.userMassage;
-  const aiResponse = props.aiResponse;
+// Define the ref type
+interface ChattboxRef {
+  loadHistory: (index: number) => void;
+}
+
+// Pass the ref as the second argument in forwardRef
+const Chattbox = forwardRef<ChattboxRef, ChattboxProps>(({ userMassage, aiResponse, isSidebarOpen }, ref) => {
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const prevUserMessageRef = useRef("");
 
@@ -25,12 +31,34 @@ function Chattbox(props: ChattboxProps) {
     }
   }, [userMassage, aiResponse]);
 
+  const { history } = useHistory();
 
+  
+  const loadHistory = async (index: number) => {
+    console.log(history, index)
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/loadHistory",
+        { 
+          index: index ,
+          history : history,
+         }
+      );
+      console.log(response.data);
+      setChatHistory(response.data);
+    } catch (error) {
+      console.error("Failed to load chat history:", error);
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    loadHistory,
+  }));
 
   return (
     <div
       className={` w-full  flex  justify-center h-[81%] mb-[3rem] overflow-y-auto transition-all ease-linear ${
-        props.isSidebarOpen ? " lg:translate-x-48" : ""
+        isSidebarOpen ? " lg:translate-x-48" : ""
       } `}
     >
       <div
@@ -69,7 +97,7 @@ function Chattbox(props: ChattboxProps) {
       </div>
     </div>
   );
-}
+});
 
 export default Chattbox;
 
