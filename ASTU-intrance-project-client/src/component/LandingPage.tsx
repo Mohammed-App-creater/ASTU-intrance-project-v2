@@ -7,19 +7,17 @@ const LandingPage = () => {
   const handleClick = () => {
     Navigate("/login");
   };
-  const fullText: string = `I am ASTUChat, a chatbot powered by Gemini-Pro AI. My purpose is to assist you with various tasks and provide helpful, accurate, and engaging responses. Whether you're looking for information, need assistance with a project, or just want to have a conversation, I am here to help. With the capabilities of Gemini-Pro AI, I can understand complex queries, generate creative content, and even analyze data, making me a versatile tool for many different needs. Let me know how I can assist you!`;
-
+  const fullText: string = `I   am ASTUChat, a chatbot powered by Gemini-Pro AI. My purpose is to assist you with various tasks and provide helpful, accurate, and engaging responses. Whether you're looking for information, need assistance with a project, or just want to have a conversation, I am here to help. With the capabilities of Gemini-Pro AI, I can understand complex queries, generate creative content, and even analyze data, making me a versatile tool for many different needs. Let me know how I can assist you!`;
 
   const [text, setText] = useState("");
 
   useEffect(() => {
-    const animateText = (fullText: string, delay: number) => {
-      let index = 0;
+    let interval: NodeJS.Timeout;
+    let index = 0;
 
-      const interval = setInterval(() => {
-        setText((prev) => {
-          return prev + fullText[index];
-        });
+    const animateText = (fullText: string, delay: number) => {
+      interval = setInterval(() => {
+        setText((prev) => prev + fullText[index]);
         index++;
 
         if (index >= fullText.length) {
@@ -28,10 +26,10 @@ const LandingPage = () => {
       }, delay);
     };
 
-    animateText(fullText, 100);
+    animateText(fullText, 80);
 
-    return () => clearInterval(100); // Cleanup the interval when the component unmounts
-  }, []);
+    return () => clearInterval(interval);
+  }, [fullText]);
 
   return (
     <section className="relative landingBg flex items-center justify-center">

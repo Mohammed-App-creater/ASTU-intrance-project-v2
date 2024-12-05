@@ -5,14 +5,25 @@ import axios from "axios";
 const SignUp = () => {
   const Navigate = useNavigate();
   const handleSignUp = ( email: string, password: string,  Name?: string) => {
+
+    if(email === "" || Name === "" || password === ""){
+      Navigate("/signUp");
+      alert("Please fill all the fields");
+      return false;
+    }
     
       axios.post("http://localhost:8000/signUp", {
       name: Name,
       email: email,
       password: password,
     }).then((response) => {
-      Navigate("/logIn");
-      console.log(response, " here");
+      if (response.data === "User registered successfully") {
+        Navigate("/logIn");
+      }
+      else{
+        alert("User already exists");
+      }
+      
     }).catch((error) => {
       console.log(error, " here");
     });

@@ -145,7 +145,7 @@ const Form = (props: {
             />
           </div>
           <button
-            disabled={ !(!emailError)}
+            disabled={ !(!emailError) && Password !== "" && Name !== ""}
             onClick={(e) => {
               e.preventDefault();
               if (signup) {

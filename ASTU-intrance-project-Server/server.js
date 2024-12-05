@@ -142,6 +142,7 @@ app.post("/signUp", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   try {
+    User.findOne({ email: email });
     const hashedPasswod = await bcrypt.hash(password, 10);
     const newUser = new User({
       name: name,

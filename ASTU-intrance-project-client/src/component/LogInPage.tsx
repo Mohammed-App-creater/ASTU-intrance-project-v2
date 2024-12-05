@@ -26,7 +26,7 @@ const LogIn = () => {
       })
       .catch((error) => {
         console.log(error);
-        console.log("login erorr");
+       alert("Invalid email or password");
       });
 
     return true;
