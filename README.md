@@ -89,9 +89,9 @@ Here are some example images of ASTUChat in action:
 
 ![Example Image 1](https://github.com/Moh-Sad/Advanced-Java-Project/blob/main/Screenshots/signup.png?raw=true)
 ![Example Image 2](https://github.com/Moh-Sad/Advanced-Java-Project/blob/main/Screenshots/login.png?raw=true)
-![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project/blob/main/Example%20img/Screenshot%202025-01-17%20195216.png?raw=true)
-![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project/blob/main/Example%20img/Screenshot%202025-01-17%20195300.png?raw=true)
-![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project/blob/main/Example%20img/Screenshot%202025-01-17%20195314.png?raw=true)
+![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project-v2/blob/main/Example%20img/Screenshot%202025-01-17%20195216.png?raw=true)
+![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project-v2/blob/main/Example%20img/Screenshot%202025-01-17%20195300.png?raw=true)
+![Example Image 2](https://github.com/Mohammed-App-creater/ASTU-intrance-project-v2/blob/main/Example%20img/Screenshot%202025-01-17%20195314.png?raw=true)
 
 
 ---
